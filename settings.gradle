@@ -1,0 +1,5 @@
+include 'mobile-deploy', \
+'mobile-api', 'mobile-api-impl', \
+'mobile-web-api', ':mobile-web-api-impl', \
+':mobile-module'
+
