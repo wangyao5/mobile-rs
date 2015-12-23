@@ -1,3 +1,5 @@
+include ':app', ':rest-adapter'
+include ':volley-23'
 include 'mobile-deploy', \
 'mobile-api', 'mobile-api-impl', \
 'mobile-web-api', ':mobile-web-api-impl', \
