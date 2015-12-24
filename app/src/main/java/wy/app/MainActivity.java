@@ -9,21 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.mobile.api.A;
 import com.mobile.api.Device;
 import com.mobile.api.Result;
+import com.mobile.api.TestData;
 import com.rest.adapter.SaturnAdapter;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,12 +32,24 @@ public class MainActivity extends AppCompatActivity {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        SaturnAdapter adapter = new SaturnAdapter.Builder().build(MainActivity.this, "http://www.baidu.com");
+                        SaturnAdapter adapter = new SaturnAdapter.Builder().build(MainActivity.this, "http://192.168.7.245:8080/mobile/api");
                         Device device = adapter.create(Device.class);
-                        Result<List<A>> devices = device.register("android", "1", "s", "d");
+                        Result<List<TestData>> devices = device.register("android", "1", "s", "d", "form");
+
+                        String a ="";
+                        String cookie ="";
+                        String form ="";
+                        String zip ="";
+                        if (devices != null) {
+                            a = devices.getData().get(0).getA();
+                            cookie = devices.getData().get(0).getCookie();
+                            form = devices.getData().get(0).getForm();
+                            zip = devices.getData().get(0).getZip();
+                        }
+
                         android.util.Log.v("yaowang", "xxx");
 
-                        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        Snackbar.make(view, "Replace with your own action" + "a:" + a + "cookie:" + cookie + "form : " + form + "zip:" + zip, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 });

@@ -1,8 +1,6 @@
 package com.rest.adapter;
 
 import android.content.Context;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.rest.adapter.utils.Utils;
 import java.lang.reflect.Proxy;
 import javax.ws.rs.Path;
@@ -10,11 +8,10 @@ import javax.ws.rs.Path;
 public final class SaturnAdapter {
     private String mBaseUrl;
     private String rootPath;
-    private RequestQueue mRequestQueue;
+    private Context mContext;
 
-    private SaturnAdapter(RequestQueue requestQueue, String baseUrl) {
-        this.mRequestQueue = requestQueue;
-        mRequestQueue.start();
+    private SaturnAdapter(Context context, String baseUrl) {
+        this.mContext = context;
         this.mBaseUrl = baseUrl;
     }
 
@@ -24,7 +21,7 @@ public final class SaturnAdapter {
         }
         Path path = service.getAnnotation(Path.class);
         rootPath = path.value();
-        return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service}, new HttpHandler(mBaseUrl, rootPath, mRequestQueue));
+        return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service}, new HttpHandler(mBaseUrl, rootPath, mContext));
     }
 
     public static final class Builder {
@@ -55,15 +52,14 @@ public final class SaturnAdapter {
         }
 
         public SaturnAdapter build(Context context) {
-            context(context);
-            return build(mContext, baseUrl);
+            return build(context, baseUrl);
         }
 
         public SaturnAdapter build(Context context, String baseUrl) {
             context(context);
             baseUrl(baseUrl);
 
-            return new SaturnAdapter(Volley.newRequestQueue(context), baseUrl);
+            return new SaturnAdapter(context, baseUrl);
         }
     }
 }

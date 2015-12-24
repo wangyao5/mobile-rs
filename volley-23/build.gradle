@@ -1,5 +1,8 @@
 apply plugin: 'java'
 
+compileJava.sourceCompatibility = JavaVersion.VERSION_1_7
+compileJava.targetCompatibility = JavaVersion.VERSION_1_7
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }

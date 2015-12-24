@@ -1,8 +1,7 @@
 apply plugin: 'java'
 
-repositories {
-    mavenCentral()
-}
+compileJava.sourceCompatibility = JavaVersion.VERSION_1_7
+compileJava.targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
