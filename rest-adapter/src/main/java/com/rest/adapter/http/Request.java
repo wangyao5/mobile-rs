@@ -25,7 +25,7 @@ import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import com.rest.adapter.http.VolleyLog.MarkerLog;
+import com.rest.adapter.http.SaturnLog.MarkerLog;
 import com.rest.adapter.http.toolbox.BasicNetwork;
 import com.rest.adapter.http.toolbox.HttpClientStack;
 import com.rest.adapter.http.toolbox.HttpStack;
@@ -460,7 +460,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @param volleyError the error retrieved from the network
      * @return an NetworkError augmented with additional information
      */
-    protected VolleyError parseNetworkError(VolleyError volleyError) {
+    protected SaturnError parseNetworkError(SaturnError volleyError) {
         return volleyError;
     }
 
@@ -487,7 +487,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
                 + getPriority() + " " + mSequence;
     }
 
-    public T request() throws VolleyError {
+    public T request() throws SaturnError {
         String userAgent = "Saturn";
         try {
             String packageName = mContext.getPackageName();

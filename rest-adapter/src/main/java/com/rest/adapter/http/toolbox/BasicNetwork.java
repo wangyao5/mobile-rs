@@ -27,8 +27,8 @@ import com.rest.adapter.http.Request;
 import com.rest.adapter.http.RetryPolicy;
 import com.rest.adapter.http.ServerError;
 import com.rest.adapter.http.TimeoutError;
-import com.rest.adapter.http.VolleyError;
-import com.rest.adapter.http.VolleyLog;
+import com.rest.adapter.http.SaturnError;
+import com.rest.adapter.http.SaturnLog;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -40,16 +40,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * A network performing Volley requests over an {@link com.rest.adapter.http.toolbox.HttpStack}.
+ * A network performing Saturn requests over an {@link com.rest.adapter.http.toolbox.HttpStack}.
  */
 public class BasicNetwork implements Network {
-    protected static final boolean DEBUG = VolleyLog.DEBUG;
+    protected static final boolean DEBUG = SaturnLog.DEBUG;
 
     private static int SLOW_REQUEST_THRESHOLD_MS = 3000;
 
@@ -78,7 +77,7 @@ public class BasicNetwork implements Network {
     }
 
     @Override
-    public NetworkResponse performRequest(Request<?> request) throws VolleyError {
+    public NetworkResponse performRequest(Request<?> request) throws SaturnError {
         long requestStart = SystemClock.elapsedRealtime();
         while (true) {
             HttpResponse httpResponse = null;
@@ -132,7 +131,7 @@ public class BasicNetwork implements Network {
                 } else {
                     throw new NoConnectionError(e);
                 }
-                VolleyLog.e("Unexpected response code %d for %s", statusCode, request.getUrl());
+                SaturnLog.e("Unexpected response code %d for %s", statusCode, request.getUrl());
                 if (responseContents != null) {
                     networkResponse = new NetworkResponse(statusCode, responseContents,
                             responseHeaders, false, SystemClock.elapsedRealtime() - requestStart);
@@ -157,8 +156,8 @@ public class BasicNetwork implements Network {
     private void logSlowRequests(long requestLifetime, Request<?> request,
             byte[] responseContents, StatusLine statusLine) {
         if (DEBUG || requestLifetime > SLOW_REQUEST_THRESHOLD_MS) {
-            VolleyLog.d("HTTP response for request=<%s> [lifetime=%d], [size=%s], " +
-                    "[rc=%d], [retryCount=%s]", request, requestLifetime,
+            SaturnLog.d("HTTP response for request=<%s> [lifetime=%d], [size=%s], " +
+                            "[rc=%d], [retryCount=%s]", request, requestLifetime,
                     responseContents != null ? responseContents.length : "null",
                     statusLine.getStatusCode(), request.getRetryPolicy().getCurrentRetryCount());
         }
@@ -170,13 +169,13 @@ public class BasicNetwork implements Network {
      * @param request The request to use.
      */
     private static void attemptRetryOnException(String logPrefix, Request<?> request,
-            VolleyError exception) throws VolleyError {
+            SaturnError exception) throws SaturnError {
         RetryPolicy retryPolicy = request.getRetryPolicy();
         int oldTimeout = request.getTimeoutMs();
 
         try {
             retryPolicy.retry(exception);
-        } catch (VolleyError e) {
+        } catch (SaturnError e) {
             request.addMarker(
                     String.format("%s-timeout-giveup [timeout=%s]", logPrefix, oldTimeout));
             throw e;
@@ -186,7 +185,7 @@ public class BasicNetwork implements Network {
 
     protected void logError(String what, String url, long start) {
         long now = SystemClock.elapsedRealtime();
-        VolleyLog.v("HTTP ERROR(%s) %d ms to fetch %s", what, (now - start), url);
+        SaturnLog.v("HTTP ERROR(%s) %d ms to fetch %s", what, (now - start), url);
     }
 
     /** Reads the contents of HttpEntity into a byte[]. */
@@ -212,7 +211,7 @@ public class BasicNetwork implements Network {
             } catch (IOException e) {
                 // This can happen if there was an exception above that left the entity in
                 // an invalid state.
-                VolleyLog.v("Error occured when calling consumingContent");
+                SaturnLog.v("Error occured when calling consumingContent");
             }
             mPool.returnBuf(buffer);
             bytes.close();

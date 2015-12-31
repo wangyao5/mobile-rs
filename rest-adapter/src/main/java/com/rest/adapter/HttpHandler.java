@@ -5,8 +5,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Types;
 import com.rest.adapter.http.Request;
-import com.rest.adapter.http.VolleyError;
-import com.rest.adapter.http.VolleyLog;
+import com.rest.adapter.http.SaturnError;
+import com.rest.adapter.http.SaturnLog;
 import com.rest.adapter.http.toolbox.StringRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -66,8 +66,8 @@ public class HttpHandler implements InvocationHandler {
         String result = "";
         try {
             result = request.request();
-        } catch (VolleyError volleyError) {
-            VolleyLog.e("vollyError" + volleyError.toString(), volleyError);
+        } catch (SaturnError volleyError) {
+            SaturnLog.e("vollyError" + volleyError.toString(), volleyError);
         }
 
         resultObject = new Gson().fromJson(result, $Gson$Types.canonicalize(returnType));

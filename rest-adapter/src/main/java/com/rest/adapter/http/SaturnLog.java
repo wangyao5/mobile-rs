@@ -29,7 +29,7 @@ import java.util.Locale;
  * to see Volley logs call:<br/>
  * {@code <android-sdk>/platform-tools/adb shell setprop log.tag.Volley VERBOSE}
  */
-public class VolleyLog {
+public class SaturnLog {
     public static String TAG = "Volley";
 
     public static boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
@@ -89,7 +89,7 @@ public class VolleyLog {
         // It will be at least two frames up, so start there.
         for (int i = 2; i < trace.length; i++) {
             Class<?> clazz = trace[i].getClass();
-            if (!clazz.equals(VolleyLog.class)) {
+            if (!clazz.equals(SaturnLog.class)) {
                 String callingClass = trace[i].getClassName();
                 callingClass = callingClass.substring(callingClass.lastIndexOf('.') + 1);
                 callingClass = callingClass.substring(callingClass.lastIndexOf('$') + 1);
@@ -106,7 +106,7 @@ public class VolleyLog {
      * A simple event log with records containing a name, thread ID, and timestamp.
      */
     static class MarkerLog {
-        public static final boolean ENABLED = VolleyLog.DEBUG;
+        public static final boolean ENABLED = SaturnLog.DEBUG;
 
         /** Minimum duration from first marker to last in an marker log to warrant logging. */
         private static final long MIN_DURATION_FOR_LOGGING_MS = 0;

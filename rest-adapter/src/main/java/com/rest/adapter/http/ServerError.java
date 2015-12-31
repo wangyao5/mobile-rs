@@ -21,7 +21,7 @@ package com.rest.adapter.http;
  * Indicates that the server responded with an error response.
  */
 @SuppressWarnings("serial")
-public class ServerError extends VolleyError {
+public class ServerError extends SaturnError {
     public ServerError(NetworkResponse networkResponse) {
         super(networkResponse);
     }

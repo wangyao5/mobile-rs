@@ -21,7 +21,7 @@ package com.rest.adapter.http;
  * Indicates that there was a network error when performing a Volley request.
  */
 @SuppressWarnings("serial")
-public class NetworkError extends VolleyError {
+public class NetworkError extends SaturnError {
     public NetworkError() {
         super();
     }
