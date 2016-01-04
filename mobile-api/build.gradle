@@ -6,3 +6,31 @@ compileJava.targetCompatibility = JavaVersion.VERSION_1_7
 dependencies {
     compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
 }
+
+task uberjar(type: Jar, dependsOn: jar) {
+    classifier = 'standalone'
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+    manifest {
+        attributes 'Main-Class': "Device.class",
+                'Implementation-Title': "${project.name}",
+                'Implementation-Version': "${version}",
+                'Implementation-Vendor': "wangyao5",
+        'Built-Date': new Date().getDateTimeString(),
+        'Built-With': "gradle-${project.getGradle().getGradleVersion()},groovy-${GroovySystem.getVersion()}",
+        'Created-By': 'Java ' + System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')'
+    }
+}
+
+task proguard(type: proguard.gradle.ProGuardTask,dependsOn:uberjar) {
+    ext{
+        jar.classifier="standalone"
+        injar= jar.archivePath
+        jar.classifier="proguard"
+        outJar= jar.archivePath
+    }
+    injars injar
+    outjars outJar
+    configuration 'proguard.pro'
+}
